@@ -1,0 +1,6 @@
+{
+  "_comment": "Optional per-genre overrides of the trope lexicons in promo_finder/signals.py. Keys replace whole lists. Example: a CEO/billionaire show adds wealth-flex words.",
+  "reveal": ["duke", "heir", "crest", "signet", "true identity", "my son", "who are you", "recogni", "reveal", "unmask",
+             "regalia", "your grace", "alive", "presumed dead", "secret", "the truth", "poison", "arsenic", "ring",
+             "it's you", "it was always me", "rightful", "imposter", "you already know", "ceo", "billionaire", "black card"]
+}
