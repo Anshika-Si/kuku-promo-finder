@@ -1,0 +1,10 @@
+data/
+*.txt
+!requirements.txt
+outputs/
+__pycache__/
+.env
+raw_outputs/
+solution_doc_source/
+*.zip
+*.pdf
