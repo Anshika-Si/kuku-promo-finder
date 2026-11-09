@@ -138,6 +138,10 @@ def parse_episode(text: str, source: str = "") -> Episode:
 def load_show(path: str | Path) -> list[Episode]:
     """Load a folder of .txt files, a single .txt, or a .zip containing them."""
     p = Path(path)
+    if not p.exists():
+        raise FileNotFoundError(
+            f"Can't find '{p}'. Point --data at the episode scripts: the input-pack .zip itself, "
+            "or a normal folder you unzipped it into (not a folder viewed inside a zip).")
     texts: list[tuple[str, str]] = []
     if p.is_dir():
         for f in sorted(p.rglob("*.txt")):

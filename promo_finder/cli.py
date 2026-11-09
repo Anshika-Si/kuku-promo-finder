@@ -25,6 +25,11 @@ def run(data: str, out: str, llm: str | None = None, top_n: int = 25, show_name:
         from . import parser as _p
         _p.SPEAKER_ALIASES.update(cfg.get("speaker_aliases", {}))
     eps = load_show(data)
+    if not eps:
+        raise ValueError(
+            f"No episode scripts found in '{data}'. Expected .txt files in the Kuku screenplay format "
+            "(blocks with 'Start: (MM:SS.ss) | End: (MM:SS.ss)'). Check that --data points at the input pack, "
+            "not at this tool's own code zip.")
     judge = None
     if llm:
         if llm != "mock":
@@ -90,7 +95,10 @@ def main():
     ap.add_argument("--lexicon", default=None, help="optional JSON overriding trope word lists, e.g. config/signals.json")
     ap.add_argument("--show-config", default=None, help="optional per-show JSON: payoff_terms, speaker_aliases, early_episodes")
     a = ap.parse_args()
-    r = run(a.data, a.out, a.llm, a.top, a.name, a.lexicon, a.show_config)
+    try:
+        r = run(a.data, a.out, a.llm, a.top, a.name, a.lexicon, a.show_config)
+    except (FileNotFoundError, ValueError) as e:
+        raise SystemExit(f"Error: {e}")
     print(json.dumps(r["stats"], indent=1))
     for p in r["promos"][:10]:
         segs = " + ".join(f"Ep{s['episode']} {s['start']}-{s['end']}" for s in p["segments"])

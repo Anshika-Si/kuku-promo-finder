@@ -4,6 +4,7 @@ Run locally:  streamlit run app.py
 Deploy free:  Streamlit Community Cloud -> point at this repo -> main file app.py
 No scripts are bundled with the app (the input pack is confidential); users upload them at run time.
 """
+import base64
 import html
 import json
 import os
@@ -18,9 +19,9 @@ from promo_finder.report import heatmap_svg
 
 st.set_page_config(page_title="Promo Finder · microdrama", page_icon="🎬", layout="wide")
 st.markdown("""<style>.block-container{padding-top:1.4rem}
-.card{border:1px solid #e6e2d8;border-radius:10px;padding:10px 14px;margin-bottom:10px;background:#fff}
+.card{border:1px solid #e6e2d8;border-radius:10px;padding:10px 14px;margin-bottom:10px;background:#fff;color:#1a1a1a}
 .sc{background:#e4572e;color:#fff;border-radius:6px;padding:1px 8px;font-weight:700}
-.why{color:#0b5d3b;font-style:italic}.fl{color:#8a6d00;font-size:12px}</style>""", unsafe_allow_html=True)
+.why{color:#2f9e6a;font-style:italic}.fl{color:#b8860b;font-size:12px}</style>""", unsafe_allow_html=True)
 
 st.title("🎬 Promo Finder")
 st.caption("Reads timestamped microdrama screenplays and returns ranked 20–60s promo cuts: hook in the first 3s, "
@@ -111,7 +112,10 @@ if "res" in st.session_state:
     if usage:
         st.caption(f"LLM judge: {usage}")
     st.subheader("Where the heat is — every line and action across the show (darker = more scroll-stopping), top-10 boxed")
-    st.html(f"<div style='background:#fff'>{heatmap_svg(show, promos)}</div>")
+    # shown as an <img> so Streamlit's HTML sanitiser can't strip the SVG; white card so it reads in dark mode too
+    svg64 = base64.b64encode(heatmap_svg(show, promos).encode("utf-8")).decode("ascii")
+    st.markdown(f"<div style='background:#fff;border-radius:10px;padding:8px'><img alt='heat map' style='width:100%' "
+                f"src='data:image/svg+xml;base64,{svg64}'></div>", unsafe_allow_html=True)
 
     st.subheader("Ranked promos — post from the top")
     lane = st.radio("Lane", ["All", "cold_ua", "retarget"], horizontal=True)

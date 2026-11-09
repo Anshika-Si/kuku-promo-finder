@@ -8,6 +8,7 @@ Reads a show's timestamped episode scripts (Kuku format) and returns **ranked 20
 ```bash
 pip install -r requirements.txt          # the core engine needs only the standard library; this adds Streamlit
 python -m promo_finder.cli --data path/to/show_folder_or.zip --out outputs/
+# --data = the episode scripts (the input-pack .zip, or a normal folder you unzipped it into), not this repo's own zip
 # optional per-show settings (payoff phrases, speaker aliases, paywall episode): --show-config show_config.json
 streamlit run app.py                      # UI: upload a .zip or the .txt files (PROMO_ALLOW_LOCAL_PATH=1 also shows a local-path field)
 ```

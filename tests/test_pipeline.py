@@ -145,3 +145,16 @@ def test_payoff_terms_match_whole_phrases_only():
     assert has_phrase("she is the duchess of ash, at last.", terms)
     assert has_phrase("duchess of ash", terms)
     assert has_phrase("wait... you're the duke?", terms)
+
+
+def test_clear_errors_for_wrong_input(tmp_path):
+    """A missing path or a zip without episode scripts gives a plain message, not a traceback."""
+    import zipfile, pytest
+    from promo_finder.cli import run
+    with pytest.raises(FileNotFoundError, match="Point --data"):
+        run(str(tmp_path / "nope.zip" / "inside"), str(tmp_path / "out"))
+    z = tmp_path / "code.zip"
+    with zipfile.ZipFile(z, "w") as f:
+        f.writestr("kuku-promo-finder/requirements.txt", "streamlit\n")
+    with pytest.raises(ValueError, match="No episode scripts found"):
+        run(str(z), str(tmp_path / "out"))
